@@ -1,0 +1,94 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.pytype/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.pyproj
+*.sln
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Data files
+*.csv
+*.tsv
+*.parquet
+*.jsonl
+*.pickle
+*.pkl
+
+# Docker
+docker-compose.override.yml
+*.dockerignore
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Python bytecode
+*.pyc
+
+# Optional: local config
+config.yaml
+secrets.yaml
+credentials.yml
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment files
+.env
+*.env
+
+# Ignore dataset and model artifacts
+data/
+models/
+checkpoints/
+output/
+artifacts/
+
+# Ignore temporary files
+*.tmp
+*.temp
+*~
+
+# OS files
+Thumbs.db
+
+# Custom exclude for local development
+local_settings.py
+
+# Ignore local database files
+*.sqlite3
+
+# Ignore VS Code settings
+.vscode/settings.json

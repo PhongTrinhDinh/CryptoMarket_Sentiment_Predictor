@@ -54,16 +54,14 @@ dist/
 *.egg-info/
 .eggs/
 
-# Python bytecode
-*.pyc
+
 
 # Optional: local config
 config.yaml
 secrets.yaml
 credentials.yml
 
-# Notebook checkpoints
-.ipynb_checkpoints/
+
 
 # Environment files
 .env
@@ -90,5 +88,4 @@ local_settings.py
 # Ignore local database files
 *.sqlite3
 
-# Ignore VS Code settings
-.vscode/settings.json
+

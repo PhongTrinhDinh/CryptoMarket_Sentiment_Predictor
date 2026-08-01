@@ -46,9 +46,3 @@ def get_technical_features(symbol: str = "BTC/USDT", limit: int = 500) -> pd.Dat
     finally:
         db.close()
         
-if __name__ == "__main__":
-    features_df = get_technical_features('BTC/USDT', limit=200)
-    
-    if not features_df.empty:
-        print("\n--- 5 Latest Candlesticks with Indicators ---")
-        print(features_df.tail())

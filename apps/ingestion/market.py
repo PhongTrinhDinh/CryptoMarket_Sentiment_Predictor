@@ -62,7 +62,3 @@ def fetch_store_ohlcv(symbol: str = "BTC/USDT", timeframe: str = '15m', limit: i
     except Exception as e:
         logger.error(f"Error fetching data from CCXT: {e}")
         
-if __name__ == "__main__":
-    logger.info("Checking and initializing the database...")
-    init_db()
-    fetch_store_ohlcv(symbol='BTC/USDT', timeframe='15m', limit=1000)

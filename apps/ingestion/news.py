@@ -78,6 +78,3 @@ def fetch_crypto_news(query: str = "Bitcoin OR BTC", target_entity="BTC"):
     finally:
         db.close()
         
-if __name__ == "__main__":
-    init_db()
-    fetch_crypto_news(query="Bitcoin OR BTC", target_entity="BTC")

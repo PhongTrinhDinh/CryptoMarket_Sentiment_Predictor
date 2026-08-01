@@ -80,6 +80,3 @@ def analyze_update_sentiments(limit: int = 10):
         logger.error(f"Database Error: {e}")
     finally:
         db.close()
-        
-if __name__ == "__main__":
-    analyze_update_sentiments(limit=10)

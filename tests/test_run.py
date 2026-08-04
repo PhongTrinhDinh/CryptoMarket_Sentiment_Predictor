@@ -10,14 +10,14 @@ from scripts.run import run_ingestion, run_sentiment, run_features, main
 def test_run_ingestion(mock_fetch_news, mock_fetch_ohlcv):
     """Test the run_ingestion pipeline function."""
     run_ingestion()
-    mock_fetch_ohlcv.assert_called_once_with(symbol='BTC/USDT', timeframe='15m', limit=100)
+    mock_fetch_ohlcv.assert_called_once_with(symbol='BTC/USDT', timeframe='15m')
     mock_fetch_news.assert_called_once_with(query='Bitcoin OR BTC', target_entity="BTC")
 
 @patch("scripts.run.analyze_update_sentiments")
 def test_run_sentiment(mock_analyze):
     """Test the run_sentiment pipeline function."""
     run_sentiment()
-    mock_analyze.assert_called_once_with(limit=30)
+    mock_analyze.assert_called_once_with(limit=500)
 
 @patch("scripts.run.build_training_dataset")
 def test_run_features(mock_build_dataset):

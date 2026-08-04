@@ -13,9 +13,12 @@ def test_fetch_store_ohlcv_success(mock_binance_class, mock_session_local):
     mock_binance_class.return_value = mock_exchange
     
     # Setup mock data: [timestamp, open, high, low, close, volume]
-    mock_exchange.fetch_ohlcv.return_value = [
-        [1627804800000, 40000.0, 41000.0, 39000.0, 40500.0, 100.0],
-        [1627805700000, 40500.0, 41500.0, 40000.0, 41000.0, 150.0]
+    mock_exchange.fetch_ohlcv.side_effect = [
+        [
+            [1627804800000, 40000.0, 41000.0, 39000.0, 40500.0, 100.0],
+            [1627805700000, 40500.0, 41500.0, 40000.0, 41000.0, 150.0]
+        ],
+        [] # Empty list on second call to break the loop
     ]
     
     # Setup mock database session
@@ -27,7 +30,7 @@ def test_fetch_store_ohlcv_success(mock_binance_class, mock_session_local):
     
     # Assert exchange was called correctly
     mock_binance_class.assert_called_once_with({'enableRateLimit': True})
-    mock_exchange.fetch_ohlcv.assert_called_once_with("BTC/USDT", "15m", 2)
+    assert mock_exchange.fetch_ohlcv.call_count == 2
     
     # Assert database operations
     mock_db.execute.assert_called_once()

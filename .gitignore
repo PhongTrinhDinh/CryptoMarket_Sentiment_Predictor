@@ -67,8 +67,6 @@ credentials.yml
 *.env
 
 # Ignore dataset and model artifacts
-data/
-models/
 checkpoints/
 output/
 artifacts/

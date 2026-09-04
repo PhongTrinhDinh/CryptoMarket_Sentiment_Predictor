@@ -53,9 +53,7 @@ def main():
     # Header & Refresh
     col1, col2 = st.columns([1, 8])
     with col1:
-        if st.button("🔄 Làm mới dữ liệu"):
-            st.cache_data.clear()
-            st.rerun()
+        st.button("🔄 Làm mới dữ liệu", on_click=st.cache_data.clear)
             
     symbol = "BTC/USDT"
     entity = "BTC"

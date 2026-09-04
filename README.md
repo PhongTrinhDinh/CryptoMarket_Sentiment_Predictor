@@ -1,90 +1,87 @@
-# Market Sentiment Predictor
+# Crypto Market Sentiment Predictor
 
-A data engineering and machine learning pipeline that fetches cryptocurrency market data alongside news articles, performs NLP-based sentiment analysis, and engineers features to predict market sentiment and price movements.
+A data engineering and machine learning pipeline that fetches cryptocurrency market data alongside news articles, performs NLP-based sentiment analysis, engineers features, and serves real-time market sentiment predictions via an interactive dashboard.
 
-## Overview
-The Market Sentiment Predictor is designed to continuously ingest financial data, process unstructured news into structured sentiment scores, and combine these into a unified dataset ready for machine learning models. 
+## 🚀 Overview
+The Market Sentiment Predictor is designed to continuously ingest financial data, process unstructured news into structured sentiment scores using Large Language Models (LLMs), combine these into a unified dataset, train an XGBoost model, and serve predictions in real time.
 
-The pipeline consists of three main stages:
-1. **Data Ingestion**: Fetches historical OHLCV (Open, High, Low, Close, Volume) data from cryptocurrency exchanges and scrapes relevant financial news.
-2. **Sentiment Analysis**: Evaluates the scraped news content to generate a sentiment score (bullish, bearish, or neutral).
-3. **Feature Engineering**: Merges market data and sentiment scores, generating a clean dataset with engineered features suitable for predictive modeling.
+The pipeline consists of five main stages:
+1. **Data Ingestion**: Fetches historical OHLCV data from cryptocurrency exchanges (e.g., Binance) and scrapes relevant financial news.
+2. **NLP Sentiment Analysis**: Evaluates the scraped news content to generate a sentiment score and reasoning using Ollama / OpenAI.
+3. **Feature Engineering**: Merges technical market indicators and news sentiment scores, generating a clean dataset.
+4. **Machine Learning Model**: Trains an XGBoost Classifier with `softprob` to output movement probabilities (Up, Down, Sideways).
+5. **Real-time Serving & Dashboard**: A FastAPI backend serves predictions, and a Streamlit dashboard visualizes the data interactively.
 
-## Features
-- **Crypto Market Data**: Integration with CCXT to reliably fetch OHLCV data from Binance and other major exchanges.
-- **News Aggregation**: Automated ingestion of cryptocurrency news and articles.
-- **NLP Sentiment Engine**: Automated scoring of text sentiment to gauge market mood.
-- **Robust Storage**: Uses PostgreSQL combined with TimescaleDB for highly efficient time-series data storage and querying.
-- **Automated Pipeline**: A centralized runner script to execute individual stages or the entire pipeline end-to-end.
+## 🛠️ Features
+- **Crypto Market Data**: Integration with CCXT to reliably fetch OHLCV data.
+- **NLP Sentiment Engine**: Automated scoring of text sentiment and reasoning extraction to gauge market mood.
+- **Machine Learning (XGBoost)**: Predicts the market direction of the next candles based on technical and sentiment features.
+- **FastAPI Backend**: A highly performant API that loads the model directly into RAM for fast real-time inference.
+- **Streamlit Dashboard**: A professional interactive UI providing Hero Action Signals, Model Confidence Breakdown, Technical Candlestick Charts, and a Live Sentiment Feed.
+- **Robust Storage**: PostgreSQL with TimescaleDB for highly efficient time-series data storage, alongside Redis for caching.
+- **Fully Dockerized**: Easily run the entire stack (DB, Cache, API, Dashboard) with a single command.
 
-## Tech Stack
+## 💻 Tech Stack
 - **Language**: Python 3.12+
-- **Database**: PostgreSQL with TimescaleDB extension
-- **ORM**: SQLAlchemy
-- **Data Processing**: Pandas, CCXT
-- **Testing**: pytest, pytest-mock
+- **Machine Learning**: XGBoost, Scikit-learn, Pandas, Numpy
+- **Web & API**: FastAPI, Uvicorn, Streamlit
+- **Data Visualization**: Plotly
+- **Database & Caching**: PostgreSQL (TimescaleDB), Redis, SQLAlchemy
 - **Infrastructure**: Docker, Docker Compose
 
-## Requirements
-- Python 3.12 or higher
-- Docker and Docker Compose (for running the database easily)
-- A `.env` file containing your database credentials and API keys (e.g., NewsAPI, OpenAI).
+## ⚙️ Installation & Usage
 
-## Installation
+### 1. Prerequisites
+- Docker and Docker Compose installed.
+- A `.env` file in the root directory containing your database credentials and API keys (e.g., NewsAPI).
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/PhongTrinhDinh/CryptoMarket_Sentiment_Predictor.git
-   cd CryptoMarket_Sentiment_Predictor
-   ```
+**Example `.env`**:
+```env
+POSTGRES_USER=phong
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=market_sentiment_db
+# POSTGRES_HOST is handled automatically in Docker Compose
+NEWSAPI_KEY=your_newsapi_key
+```
 
-2. **Set up a virtual environment:**
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-   ```
+### 2. Run the Entire Stack (Recommended)
+You can spin up the PostgreSQL Database, Redis Cache, FastAPI Backend, and Streamlit Dashboard simultaneously using Docker Compose:
 
-3. **Install dependencies:**
-   *(Assuming a `requirements.txt` is present or using pip directly)*
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *(Or install the core packages manually: `pip install ccxt pandas sqlalchemy psycopg2-binary pytest pytest-mock python-dotenv`)*
+```bash
+docker-compose up --build -d
+```
 
-4. **Environment Variables:**
-   Create a `.env` file in the root directory and populate it with your credentials:
-   ```env
-   POSTGRES_USER=your_user
-   POSTGRES_PASSWORD=your_password
-   POSTGRES_DB=market_sentiment_db
-   POSTGRES_HOST=localhost
-   ```
+Once all containers are running:
+- **Interactive Dashboard (Streamlit)**: [http://localhost:8501](http://localhost:8501)
+- **API Documentation (Swagger UI)**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-## Deployment and Usage
+To stop the stack:
+```bash
+docker-compose down
+```
 
-1. **Start the Database:**
-   Use Docker Compose to spin up the PostgreSQL/TimescaleDB container.
-   ```bash
-   docker-compose up -d
-   ```
+### 3. Running Data Pipelines Manually (Optional)
+If you wish to run ingestion, sentiment extraction, feature building, or model training manually, you can set up a local virtual environment:
 
-2. **Run the Pipeline:**
-   You can run the entire pipeline or specific tasks using the main runner script.
-   
-   To run the full pipeline (Ingestion -> Sentiment -> Features):
-   ```bash
-   python scripts/run.py --task all
-   ```
-   
-   To run a specific stage:
-   ```bash
-   python scripts/run.py --task ingest
-   python scripts/run.py --task sentiment
-   python scripts/run.py --task features
-   ```
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-3. **Running Tests:**
-   Execute the test suite to ensure everything is working correctly.
-   ```bash
-   python -m pytest tests/
-   ```
+Run specific pipeline tasks:
+```bash
+# Data pipelines
+python scripts/run.py --task ingest
+python scripts/run.py --task sentiment
+python scripts/run.py --task features
+
+# Model training
+python apps/models/train.py
+```
+
+### 4. Running Tests
+Execute the test suite to ensure the API and modules are working correctly:
+```bash
+pytest tests/
+```

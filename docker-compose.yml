@@ -38,6 +38,38 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    build: .
+    container_name: fastapi_backend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  dashboard:
+    build: .
+    container_name: streamlit_dashboard
+    restart: always
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    env_file:
+      - .env
+    environment:
+      - API_URL=http://api:8000/predict
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
 volumes:
   pgdata:
   redisdata:

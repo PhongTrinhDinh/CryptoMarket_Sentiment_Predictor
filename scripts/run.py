@@ -25,7 +25,7 @@ def run_ingestion():
     
 def run_sentiment():
     logger.info("=== START: NLP SENTIMENT ANALYSIS ===")
-    analyze_update_sentiments(limit=500)
+    analyze_update_sentiments(limit=20)
     logger.info("=== DONE: NLP SENTIMENT ANALYSYS ===")
     
 def run_features():

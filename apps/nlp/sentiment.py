@@ -77,6 +77,10 @@ def analyze_update_sentiments(limit: int = 10):
                 article.sentiment_reason = response.reason
                 
                 logger.info(f"[ID: {article.id}] Score: {response.score} | Reason: {response.reason}")
+                
+                # Tạm nghỉ 3 giây giữa mỗi request để tránh lỗi HTTP 429 (Too Many Requests) của gói API miễn phí
+                import time
+                time.sleep(3)
             
             except Exception as e:
                 logger.error(f"Error calling LLM for article ID {article.id}: {e}")

@@ -1,5 +1,5 @@
-# Sử dụng base image Python 3.10 mỏng nhẹ
-FROM python:3.10-slim
+# Sử dụng base image Python 3.12 mỏng nhẹ
+FROM python:3.12-slim
 
 # Thiết lập thư mục làm việc
 WORKDIR /app

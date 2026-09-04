@@ -16,10 +16,19 @@ from apps.db.models import NewsSentiment
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "http://localhost:11434/v1")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "ollama")
+LLM_MODEL = os.getenv("LLM_MODEL", "gemma4:e2b")
+
 client = instructor.from_openai(
     OpenAI(
-        base_url="http://localhost:11434/v1",
-        api_key="ollama"
+        base_url=OPENAI_BASE_URL,
+        api_key=OPENAI_API_KEY
     ),
     mode=instructor.Mode.JSON
 )
@@ -43,7 +52,7 @@ def analyze_update_sentiments(limit: int = 10):
             logger.info("There is no news requiring sentiment analysis.")
             return
         
-        logger.info(f"Analyzing sentiment for {len(unprocessed_news)} articles using Ollama...")
+        logger.info(f"Analyzing sentiment for {len(unprocessed_news)} articles using model {LLM_MODEL}...")
         
         for article in unprocessed_news:
             prompt = f"""
@@ -55,7 +64,7 @@ def analyze_update_sentiments(limit: int = 10):
             
             try:
                 response = client.chat.completions.create(
-                    model='gemma4:e2b',
+                    model=LLM_MODEL,
                     response_model=SentimentResult,
                     messages=[
                         {"role": "system", "content": "You are a JSON extraction system. Return only valid JSON matching the requested structure; do not provide explanations or output any markdown text outside of the JSON."},
@@ -70,7 +79,7 @@ def analyze_update_sentiments(limit: int = 10):
                 logger.info(f"[ID: {article.id}] Score: {response.score} | Reason: {response.reason}")
             
             except Exception as e:
-                logger.error(f"Error calling Ollama for article ID {article.id}: {e}")
+                logger.error(f"Error calling LLM for article ID {article.id}: {e}")
             
         db.commit()
         logger.info("Sentiment score updated successfully!")
